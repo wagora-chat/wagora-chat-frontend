@@ -1,15 +1,10 @@
-import {sendEmailCode, signUp} from "../lib/api/auth";
+import {signUp} from "../lib/api/auth";
 import {devtools} from "zustand/middleware";
 import {create} from "zustand";
+import {FieldValues} from "react-hook-form";
 
 interface UseSignUpStore {
-    body: {
-        "profile": string,
-        "nickname": string,
-        "email": string,
-        "password": string,
-        "checkPassword": string
-    };
+    body: FieldValues;
     submitForm: (body: UseSignUpStore['body']) => void;
     signUp: (body: UseSignUpStore['body']) => void;
 }

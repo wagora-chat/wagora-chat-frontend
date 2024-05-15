@@ -1,17 +1,12 @@
 import client from "./client";
+import {FieldValues} from "react-hook-form";
 
 interface SendEmailCodeParams {
     email: string;
 }
 
 interface SignUpParams {
-    body: {
-        "profile": string,
-        "nickname": string,
-        "email": string,
-        "password": string,
-        "checkPassword": string
-    }
+    body: FieldValues;
 }
 
 export const sendEmailCode = ({ email }: SendEmailCodeParams) => client.post('/auth/emails', ({ email }));
