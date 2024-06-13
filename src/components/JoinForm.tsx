@@ -1,15 +1,24 @@
-import React from "react";
+import React, {ChangeEvent} from "react";
 import useAuthStore from "../store/authStore";
-import {signUp} from "../lib/api/auth";
+import {fileUpload, signUp} from "../lib/api/auth";
 
 const JoinForm: React.FC = () => {
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setProfile(file);
+        }
+    };
+
     const {
         profile,
+        path,
         email,
         nickname,
         password,
         checkPassword,
         setProfile,
+        setPath,
         setEmail,
         setNickname,
         setPassword,
@@ -21,16 +30,9 @@ const JoinForm: React.FC = () => {
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
-                    console.log({
-                        profile,
-                        email,
-                        nickname,
-                        password,
-                        checkPassword
-                    })
                     signUp(
                         {
-                            profile,
+                            path,
                             email,
                             nickname,
                             password,
@@ -60,12 +62,30 @@ const JoinForm: React.FC = () => {
                     <input
                         id="profile"
                         type="file"
-                        value={profile}
-                        onChange={(e) => setProfile(e.target.value)}
+                        accept="image/*"
+                        onChange={handleFileChange}
                     />
                     <button
                         className='border-2 border-gray-300 hover:bg-gray-400'
-                        onClick={() => {alert('파일 업로드 API 호출 예정')}}
+                        disabled={!profile}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            fileUpload({file: profile}).then((response) => {
+                            console.log('파입 업로드 성공', response.data);
+                            setPath(response.data);
+                        })
+                            .catch((error) => {
+                                if (error.response) {
+                                    // 서버 응답이 2xx 이외의 상태 코드인 경우
+                                    console.error('파입 업로드 실패:', error.response.data);
+                                } else if (error.request) {
+                                    // 요청이 만들어졌지만 응답을 받지 못한 경우
+                                    console.error('응답 없음:', error.request);
+                                } else {
+                                    // 요청을 설정하는 동안 오류가 발생한 경우
+                                    console.error('요청 설정 오류:', error.message);
+                                }
+                            });}}
                     >프로필 등록</button>
                 </div>
 

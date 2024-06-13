@@ -1,12 +1,14 @@
 import create from 'zustand';
 
 interface AuthState {
-    profile: string;
+    profile: File | null;
+    path: string
     email: string;
     nickname: string;
     password: string;
     checkPassword: string;
-    setProfile: (profile: string) => void;
+    setProfile: (profile: File) => void;
+    setPath: (path: string) => void;
     setEmail: (email: string) => void;
     setNickname: (nickname: string) => void;
     setPassword: (password: string) => void;
@@ -14,12 +16,14 @@ interface AuthState {
 }
 
 const useAuthStore = create<AuthState>((set) => ({
-    profile: '',
+    profile: null,
+    path: '',
     email: '',
     nickname: '',
     password: '',
     checkPassword: '',
     setProfile: (profile) => set({ profile }),
+    setPath: (path) => set({ path }),
     setEmail: (email) => set({ email }),
     setNickname: (nickname) => set({ nickname }),
     setPassword: (password) => set({ password }),
