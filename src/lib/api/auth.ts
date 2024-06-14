@@ -16,6 +16,10 @@ interface CheckNicknameParams {
     nickname: string,
 }
 
+interface CheckEmailParams {
+    email: string,
+}
+
 interface FileUploadParams {
     file: File | null;
 }
@@ -27,6 +31,13 @@ export const signUp = (body: SignUpParams) => client.post('/auth/signUp', ({body
 export const CheckDuplicateNickname = ({nickname}: CheckNicknameParams) => (client.get('auth/nicknames', {
         params: {
             nickname,
+        },
+    },
+));
+
+export const CheckDuplicateEmail = ({email}: CheckEmailParams) => (client.get('auth/emails', {
+        params: {
+            email,
         },
     },
 ));
