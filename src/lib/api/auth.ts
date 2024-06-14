@@ -5,27 +5,38 @@ interface SendEmailCodeParams {
 }
 
 interface SignUpParams {
-        "path": string,
-        "nickname": string,
-        "email": string,
-        "password": string,
-        "checkPassword": string
+    "path": string,
+    "nickname": string,
+    "email": string,
+    "password": string,
+    "checkPassword": string
 }
 
-interface FileTransportParams {
-        file: File | null;
+interface CheckNicknameParams {
+    nickname: string,
 }
 
-export const sendEmailCode = ({ email }: SendEmailCodeParams) => client.post('/auth/emails', ({ email }));
+interface FileUploadParams {
+    file: File | null;
+}
 
-export const signUp = ( body  : SignUpParams ) => client.post('/auth/signUp', ({ body }));
+export const sendEmailCode = ({email}: SendEmailCodeParams) => client.post('/auth/emails', ({email}));
 
-export const fileUpload = ({ file }: FileTransportParams ) => {
-        const formData = new FormData();
-        if(file) formData.append('file', file);
-        return client.post('/fileUpload', formData, {
-                headers: {
-                        'Content-Type': 'multipart/form-data',
-                },
-        });
+export const signUp = (body: SignUpParams) => client.post('/auth/signUp', ({body}));
+
+export const CheckDuplicateNickname = ({nickname}: CheckNicknameParams) => (client.get('auth/nicknames', {
+        params: {
+            nickname,
+        },
+    },
+));
+
+export const fileUpload = ({file}: FileUploadParams) => {
+    const formData = new FormData();
+    if (file) formData.append('file', file);
+    return client.post('/fileUpload', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
 };

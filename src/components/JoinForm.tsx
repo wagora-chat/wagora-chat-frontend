@@ -1,6 +1,6 @@
 import React, {ChangeEvent} from "react";
 import useAuthStore from "../store/authStore";
-import {fileUpload, signUp} from "../lib/api/auth";
+import {CheckDuplicateNickname, fileUpload, signUp} from "../lib/api/auth";
 
 const JoinForm: React.FC = () => {
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -39,20 +39,9 @@ const JoinForm: React.FC = () => {
                             checkPassword
                         }
                     ).then((response) => {
-                        console.log('회원가입 성공:', response.data);
+                        alert('회원가입 완료');
                     })
-                        .catch((error) => {
-                            if (error.response) {
-                                // 서버 응답이 2xx 이외의 상태 코드인 경우
-                                console.error('회원가입 실패:', error.response.data);
-                            } else if (error.request) {
-                                // 요청이 만들어졌지만 응답을 받지 못한 경우
-                                console.error('응답 없음:', error.request);
-                            } else {
-                                // 요청을 설정하는 동안 오류가 발생한 경우
-                                console.error('요청 설정 오류:', error.message);
-                            }
-                        });
+                        .catch(() => alert('회원가입 실패'));
                 }}
                 className='flex flex-col justify-center items-center w-96 h-96 border-2'
             >
@@ -71,21 +60,11 @@ const JoinForm: React.FC = () => {
                         onClick={(e) => {
                             e.preventDefault();
                             fileUpload({file: profile}).then((response) => {
-                            console.log('파입 업로드 성공', response.data);
+                            alert('프로필 이미지가 설정되었습니다.');
                             setPath(response.data);
                         })
-                            .catch((error) => {
-                                if (error.response) {
-                                    // 서버 응답이 2xx 이외의 상태 코드인 경우
-                                    console.error('파입 업로드 실패:', error.response.data);
-                                } else if (error.request) {
-                                    // 요청이 만들어졌지만 응답을 받지 못한 경우
-                                    console.error('응답 없음:', error.request);
-                                } else {
-                                    // 요청을 설정하는 동안 오류가 발생한 경우
-                                    console.error('요청 설정 오류:', error.message);
-                                }
-                            });}}
+                            .catch(() => alert('파일 업로드 실패'));
+                        }}
                     >프로필 등록</button>
                 </div>
 
@@ -117,7 +96,14 @@ const JoinForm: React.FC = () => {
                     />
                     <button
                         className='border-2 border-gray-300 hover:bg-gray-400'
-                        onClick={() => {alert('중복검사 API 호출 예정')}}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            CheckDuplicateNickname({nickname: nickname}).then((response) => {
+                                if(response.data.result) alert("사용 가능한 이름입니다.");
+                                else alert("이미 사용 중인 이름입니다.");
+                            })
+                                .catch(() => alert("중복 검사 실패"));
+                        }}
                     >중복 검사</button>
                 </div>
 
