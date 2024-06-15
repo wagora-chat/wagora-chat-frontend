@@ -1,10 +1,10 @@
 import React, {ChangeEvent} from "react";
 import useAuthStore from "../store/authStore";
-import {CheckDuplicateEmail, CheckDuplicateNickname, fileUpload, signUp} from "../lib/api/auth";
+import {checkDuplicateEmail, checkDuplicateNickname, fileUpload, signUp} from "../lib/api/auth";
 
 const JoinForm: React.FC = () => {
-    const [checkDuplicateNickname, setCheckDuplicateNickname] = React.useState<boolean>(true);
-    const [checkDuplicateEmail, setCheckDuplicateEmail] = React.useState<boolean>(true);
+    const [checkNickname, setCheckNickname] = React.useState<boolean>(true);
+    const [checkEmail, setCheckEmail] = React.useState<boolean>(true);
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -46,10 +46,9 @@ const JoinForm: React.FC = () => {
                     })
                         .catch(() => alert('회원가입 실패'));
                 }}
-                className='flex flex-col justify-center items-center w-96 h-96 border-2'
+                className='flex flex-col justify-center items-center w-96 h-96 border-2 gap-4'
             >
 
-                <div>
                     <label htmlFor="profile">프로필</label>
                     <input
                         id="profile"
@@ -69,26 +68,25 @@ const JoinForm: React.FC = () => {
                             .catch(() => alert('파일 업로드 실패'));
                         }}
                     >프로필 등록</button>
-                </div>
 
-                <div>
                     <div>
                         <label htmlFor="email">이메일</label>
                         <input
                             id="email"
                             type="email"
                             value={email}
-                            readOnly={!checkDuplicateEmail}
+                            readOnly={!checkEmail}
                             onChange={(e) => setEmail(e.target.value)}
+                            className={'border-2'}
                         />
                         <button
                             className='border-2 border-gray-300 hover:bg-gray-400'
                             onClick={(e) => {
                                 e.preventDefault();
-                                CheckDuplicateEmail({email : email}).then((response) => {
+                                checkDuplicateEmail({email : email}).then((response) => {
                                     if(response.data.result) {
                                         alert("사용 가능한 이메일입니다.");
-                                        setCheckDuplicateEmail(false);
+                                        setCheckEmail(false);
                                     }
                                     else alert("이미 사용 중인 이메일입니다.");
                                 })
@@ -98,7 +96,6 @@ const JoinForm: React.FC = () => {
                         </button>
                     </div>
                     <button className='border-2 border-gray-300 hover:bg-gray-400'>이메일 인증하기</button>
-                </div>
 
                 <div>
                     <label htmlFor="nickname">유저 네임</label>
@@ -106,17 +103,18 @@ const JoinForm: React.FC = () => {
                         id="nickname"
                         type="text"
                         value={nickname}
-                        readOnly={!checkDuplicateNickname}
+                        readOnly={!checkNickname}
                         onChange={(e) => setNickname(e.target.value)}
+                        className={'border-2'}
                     />
                     <button
                         className='border-2 border-gray-300 hover:bg-gray-400'
                         onClick={(e) => {
                             e.preventDefault();
-                            CheckDuplicateNickname({nickname: nickname}).then((response) => {
+                            checkDuplicateNickname({nickname: nickname}).then((response) => {
                                 if(response.data.result) {
                                     alert("사용 가능한 이름입니다.");
-                                    setCheckDuplicateNickname(false);
+                                    setCheckNickname(false);
                                 }
                                 else alert("이미 사용 중인 이름입니다.");
                             })
@@ -132,6 +130,7 @@ const JoinForm: React.FC = () => {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        className={'border-2'}
                     />
                 </div>
 
@@ -142,13 +141,14 @@ const JoinForm: React.FC = () => {
                         type="password"
                         value={checkPassword}
                         onChange={(e) => setCheckPassword(e.target.value)}
+                        className={'border-2'}
                     />
                 </div>
 
                 <button
                     type="submit"
                     className='border-2 border-gray-300 hover:bg-gray-400'
-                    disabled={checkDuplicateNickname && checkDuplicateEmail}
+                    disabled={checkNickname && checkEmail}
                 >회원가입</button>
             </form>
         </div>
