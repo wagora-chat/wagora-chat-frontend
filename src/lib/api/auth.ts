@@ -12,6 +12,11 @@ interface SignUpParams {
     "checkPassword": string
 }
 
+interface LoginParams {
+    "email": string,
+    "password": string,
+}
+
 interface CheckNicknameParams {
     nickname: string,
 }
@@ -28,14 +33,16 @@ export const sendEmailCode = ({email}: SendEmailCodeParams) => client.post('/aut
 
 export const signUp = (body: SignUpParams) => client.post('/auth/signUp', ({body}));
 
-export const CheckDuplicateNickname = ({nickname}: CheckNicknameParams) => (client.get('auth/nicknames', {
+export const login = (body: LoginParams) => client.post('/auth/login', ({body}));
+
+export const checkDuplicateNickname = ({nickname}: CheckNicknameParams) => (client.get('auth/nicknames', {
         params: {
             nickname,
         },
     },
 ));
 
-export const CheckDuplicateEmail = ({email}: CheckEmailParams) => (client.get('auth/emails', {
+export const checkDuplicateEmail = ({email}: CheckEmailParams) => (client.get('auth/emails', {
         params: {
             email,
         },
