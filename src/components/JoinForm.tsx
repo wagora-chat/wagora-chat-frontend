@@ -1,10 +1,55 @@
-import React, {ChangeEvent} from "react";
+import React, { ChangeEvent } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import useAuthStore from "../store/authStore";
-import {checkDuplicateEmail, checkDuplicateNickname, fileUpload, signUp} from "../lib/api/auth";
+import { checkDuplicateEmail, checkDuplicateNickname, fileUpload, sendVerifyCode, signUp } from "../lib/api/auth";
+import AuthError from "./AuthError";
+
+interface FormData {
+    email: string;
+    verifyCode: string;
+    nickname: string;
+    password: string;
+    checkPassword: string;
+}
 
 const JoinForm: React.FC = () => {
-    const [checkNickname, setCheckNickname] = React.useState<boolean>(true);
-    const [checkEmail, setCheckEmail] = React.useState<boolean>(true);
+    const [checkEmail, setCheckEmail] = React.useState(false);
+    const [checkNickname, setCheckNickname] = React.useState(false);
+    const [checkVerifyCode, setCheckVerifyCode] = React.useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setError,
+        clearErrors,
+    } = useForm<FormData>();
+
+    const {
+        profile,
+        path,
+        email,
+        nickname,
+        password,
+        verifyCode,
+        setProfile,
+        setPath,
+        setEmail,
+        setNickname,
+        setPassword,
+        setVerifyCode,
+    } = useAuthStore();
+
+    const onSubmit: SubmitHandler<FormData> = (data) => {
+        if(checkEmail && checkNickname && checkVerifyCode) {
+            signUp({ path, email: data.email, nickname: data.nickname, password: data.password, checkPassword: data.checkPassword })
+                .then(() => {
+                    alert("회원가입 완료");
+                })
+                .catch(() => alert("회원가입 실패"));
+        }
+        else alert('중복 검사 및 이메일 인증을 모두 완료해주세요');
+    };
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -13,114 +58,123 @@ const JoinForm: React.FC = () => {
         }
     };
 
-    const {
-        profile,
-        path,
-        email,
-        nickname,
-        password,
-        checkPassword,
-        setProfile,
-        setPath,
-        setEmail,
-        setNickname,
-        setPassword,
-        setCheckPassword,
-    } = useAuthStore();
-
     return (
-        <div className='flex min-h-screen justify-center items-center border-2'>
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    signUp(
-                        {
-                            path,
-                            email,
-                            nickname,
-                            password,
-                            checkPassword
-                        }
-                    ).then((response) => {
-                        alert('회원가입 완료');
-                    })
-                        .catch(() => alert('회원가입 실패'));
-                }}
-                className='flex flex-col justify-center items-center w-96 h-96 border-2 gap-4'
-            >
+        <div className="flex min-h-screen justify-center items-center border-2">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center items-center w-96 h-[42rem] border-2 gap-8">
+                <label htmlFor="profile">프로필</label>
+                <input id="profile" type="file" accept="image/*" onChange={handleFileChange} />
+                <button
+                    className="border-2 border-gray-300 hover:bg-gray-400"
+                    disabled={!profile}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        fileUpload({ file: profile })
+                            .then((response) => {
+                                alert("프로필 이미지가 설정되었습니다.");
+                                setPath(response.data);
+                            })
+                            .catch(() => alert("파일 업로드 실패"));
+                    }}
+                >
+                    프로필 등록
+                </button>
 
-                    <label htmlFor="profile">프로필</label>
+                <div>
+                    <label htmlFor="email">이메일</label>
                     <input
-                        id="profile"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
+                        id="email"
+                        type="email"
+                        {...register("email", {
+                            required: "이메일을 입력해주세요",
+                            pattern: {
+                                value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/,
+                                message: "유효한 이메일 주소를 입력해주세요",
+                            },
+                        })}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="border-2"
                     />
                     <button
-                        className='border-2 border-gray-300 hover:bg-gray-400'
-                        disabled={!profile}
+                        className="border-2 border-gray-300 hover:bg-gray-400"
                         onClick={(e) => {
                             e.preventDefault();
-                            fileUpload({file: profile}).then((response) => {
-                            alert('프로필 이미지가 설정되었습니다.');
-                            setPath(response.data);
-                        })
-                            .catch(() => alert('파일 업로드 실패'));
-                        }}
-                    >프로필 등록</button>
-
-                    <div>
-                        <label htmlFor="email">이메일</label>
-                        <input
-                            id="email"
-                            type="email"
-                            value={email}
-                            readOnly={!checkEmail}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className={'border-2'}
-                        />
-                        <button
-                            className='border-2 border-gray-300 hover:bg-gray-400'
-                            onClick={(e) => {
-                                e.preventDefault();
-                                checkDuplicateEmail({email : email}).then((response) => {
-                                    if(response.data.result) {
+                            checkDuplicateEmail({ email })
+                                .then((response) => {
+                                    if (response.data.result) {
                                         alert("사용 가능한 이메일입니다.");
-                                        setCheckEmail(false);
+                                        setCheckEmail(true);
+                                    } else {
+                                        setError("email", { type: "manual", message: "이미 사용 중인 이메일입니다." });
                                     }
-                                    else alert("이미 사용 중인 이메일입니다.");
                                 })
-                                    .catch(() => alert("중복 검사 실패"));
-                            }}
-                        >중복 검사
-                        </button>
-                    </div>
-                    <button className='border-2 border-gray-300 hover:bg-gray-400'>이메일 인증하기</button>
+                                .catch(() => alert("중복 검사 실패"));
+                        }}
+                    >
+                        중복 검사
+                    </button>
+                    {errors.email && <AuthError errorMassage={errors.email.message}/>}
+                </div>
+                <button className="border-2 border-gray-300 hover:bg-gray-400">이메일 인증하기</button>
+
+                <div>
+                    <label htmlFor="verify">인증번호</label>
+                    <input
+                        id="verify"
+                        type="text"
+                        {...register("verifyCode", { required: "인증번호를 입력해주세요" })}
+                        className="border-2"
+                        onChange={(e) => setVerifyCode(e.target.value)}
+                    />
+                    <button
+                        className="border-2 border-gray-300 hover:bg-gray-400"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            sendVerifyCode({ email }, { verifyCode })
+                                .then((response) => {
+                                    if (response.data.email === email) {
+                                        alert("인증 성공");
+                                        setCheckVerifyCode(true);
+                                    }
+                                    else alert("인증 번호를 다시 입력해주세요");
+                                })
+                                .catch((error) => {
+                                    console.log("에러 발생", error);
+                                });
+                        }}
+                    >
+                        인증번호 확인
+                    </button>
+                    {errors.verifyCode && <AuthError errorMassage={errors.verifyCode.message}/>}
+                </div>
 
                 <div>
                     <label htmlFor="nickname">유저 네임</label>
                     <input
                         id="nickname"
                         type="text"
-                        value={nickname}
-                        readOnly={!checkNickname}
+                        {...register("nickname", { required: "닉네임을 입력해주세요" })}
+                        className="border-2"
                         onChange={(e) => setNickname(e.target.value)}
-                        className={'border-2'}
                     />
                     <button
-                        className='border-2 border-gray-300 hover:bg-gray-400'
+                        className="border-2 border-gray-300 hover:bg-gray-400"
                         onClick={(e) => {
                             e.preventDefault();
-                            checkDuplicateNickname({nickname: nickname}).then((response) => {
-                                if(response.data.result) {
-                                    alert("사용 가능한 이름입니다.");
-                                    setCheckNickname(false);
-                                }
-                                else alert("이미 사용 중인 이름입니다.");
-                            })
+                            checkDuplicateNickname({ nickname })
+                                .then((response) => {
+                                    if (response.data.result) {
+                                        alert("사용 가능한 이름입니다.");
+                                        setCheckNickname(true);
+                                    } else {
+                                        setError("nickname", { type: "manual", message: "이미 사용 중인 이름입니다." });
+                                    }
+                                })
                                 .catch(() => alert("중복 검사 실패"));
                         }}
-                    >중복 검사</button>
+                    >
+                        중복 검사
+                    </button>
+                    {errors.nickname && <AuthError errorMassage={errors.nickname.message}/>}
                 </div>
 
                 <div>
@@ -128,10 +182,11 @@ const JoinForm: React.FC = () => {
                     <input
                         id="password"
                         type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className={'border-2'}
+                        {...register("password", { required: "비밀번호를 입력해주세요" })}
+                        className="border-2"
+                        onChange={(e) => {setPassword(e.target.value)}}
                     />
+                    {errors.password && <AuthError errorMassage={errors.password.message}/>}
                 </div>
 
                 <div>
@@ -139,20 +194,21 @@ const JoinForm: React.FC = () => {
                     <input
                         id="checkPassword"
                         type="password"
-                        value={checkPassword}
-                        onChange={(e) => setCheckPassword(e.target.value)}
-                        className={'border-2'}
+                        {...register("checkPassword", {
+                            required: "비밀번호 확인을 입력해주세요",
+                            validate: (value) => value === password || "비밀번호가 일치하지 않습니다",
+                        })}
+                        className="border-2"
                     />
+                    {errors.checkPassword && <AuthError errorMassage={errors.checkPassword.message} />}
                 </div>
 
-                <button
-                    type="submit"
-                    className='border-2 border-gray-300 hover:bg-gray-400'
-                    disabled={checkNickname && checkEmail}
-                >회원가입</button>
+                <button type="submit" className="border-2 border-gray-300 hover:bg-gray-400">
+                    회원가입
+                </button>
             </form>
         </div>
     );
-}
+};
 
 export default JoinForm;
