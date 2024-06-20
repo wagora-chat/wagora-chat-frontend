@@ -4,8 +4,12 @@ interface SendEmailCodeParams {
     email: string;
 }
 
+interface SendVerifyCodeParams {
+    verifyCode: string;
+}
+
 interface SignUpParams {
-    "path": string,
+    "path": string | null,
     "nickname": string,
     "email": string,
     "password": string,
@@ -30,6 +34,8 @@ interface FileUploadParams {
 }
 
 export const sendEmailCode = ({email}: SendEmailCodeParams) => client.post('/auth/emails', ({email}));
+
+export const sendVerifyCode = ({email}: SendEmailCodeParams, {verifyCode}: SendVerifyCodeParams) => client.post('auth/emails', ({ email, verifyCode }));
 
 export const signUp = (body: SignUpParams) => client.post('/auth/signUp', ({body}));
 
