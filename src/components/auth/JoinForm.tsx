@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import useAuthStore from "../store/authStore";
-import { checkDuplicateEmail, checkDuplicateNickname, fileUpload, sendVerifyCode, signUp } from "../lib/api/auth";
+import useAuthStore from "../../store/authStore";
+import { checkDuplicateEmail, checkDuplicateNickname, fileUpload, sendVerifyCode, signUp } from "../../lib/api/auth";
 import AuthError from "./AuthError";
 
 interface FormData {
@@ -22,7 +22,6 @@ const JoinForm: React.FC = () => {
         handleSubmit,
         formState: { errors },
         setError,
-        clearErrors,
     } = useForm<FormData>();
 
     const {
@@ -84,6 +83,7 @@ const JoinForm: React.FC = () => {
                     <input
                         id="email"
                         type="email"
+                        disabled={checkEmail}
                         {...register("email", {
                             required: "이메일을 입력해주세요",
                             pattern: {
@@ -121,6 +121,7 @@ const JoinForm: React.FC = () => {
                     <input
                         id="verify"
                         type="text"
+                        disabled={checkVerifyCode}
                         {...register("verifyCode", { required: "인증번호를 입력해주세요" })}
                         className="border-2"
                         onChange={(e) => setVerifyCode(e.target.value)}
@@ -152,6 +153,7 @@ const JoinForm: React.FC = () => {
                     <input
                         id="nickname"
                         type="text"
+                        disabled={checkNickname}
                         {...register("nickname", { required: "닉네임을 입력해주세요" })}
                         className="border-2"
                         onChange={(e) => setNickname(e.target.value)}
