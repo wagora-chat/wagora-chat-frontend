@@ -1,5 +1,6 @@
 import {create} from "zustand";
 import ChatRoom from "../components/chat/ChatRoom";
+import {devtools} from "zustand/middleware";
 
 interface ChatRoom {
     id: number,
@@ -18,13 +19,14 @@ interface ChatStore {
     setChatRoomList: (chatRoomList: ChatRoom[]) => void,
 }
 
-const useChatStore = create<ChatStore>((set) => ({
+const useChatStore = create<ChatStore>()(
+    devtools((set) => ({
     chatName: null,
     memberId: null,
     chatRoomList: [],
     setChatName: (chatName: string) => set({ chatName }),
     setMemberId: (memberId: string) => set({ memberId }),
     setChatRoomList: (chatRoomList: ChatRoom[]) => set({ chatRoomList: chatRoomList }),
-}));
+})));
 
 export default useChatStore;

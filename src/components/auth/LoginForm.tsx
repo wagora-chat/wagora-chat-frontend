@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import useLoginStore from "../../store/loginStore";
 import { login } from "../../lib/api/auth";
@@ -11,16 +11,16 @@ interface LoginFormInputs {
 }
 
 const LoginForm: React.FC = () => {
-
     const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
+    const navigate = useNavigate();
 
     const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
         login({
             email: data.email,
             password: data.password,
         }).then((response) => {
-            console.log('로그인 성공');
-            sessionStorage.setItem('member', JSON.stringify(response.data));
+            navigate('/chats');
+            sessionStorage.setItem('member', JSON.stringify(response.data.data.accessToken));
         }).catch((error) => {
             console.error(error);
         });

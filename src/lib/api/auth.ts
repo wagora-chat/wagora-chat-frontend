@@ -1,14 +1,14 @@
 import client from "./client";
 
-interface SendEmailCodeParams {
+interface SendEmailCodeBody {
     email: string;
 }
 
-interface SendVerifyCodeParams {
+interface SendVerifyCodeBody {
     verifyCode: string;
 }
 
-interface SignUpParams {
+interface SignUpBody {
     "path": string | null,
     "nickname": string,
     "email": string,
@@ -16,7 +16,7 @@ interface SignUpParams {
     "checkPassword": string
 }
 
-interface LoginParams {
+interface LoginBody {
     "email": string,
     "password": string,
 }
@@ -29,17 +29,17 @@ interface CheckEmailParams {
     email: string,
 }
 
-interface FileUploadParams {
+interface FileUploadBody {
     file: File | null;
 }
 
-export const sendEmailCode = ({email}: SendEmailCodeParams) => client.post('/auth/emails', ({email}));
+export const sendEmailCode = ({email}: SendEmailCodeBody) => client.post('/auth/emails', ({email}));
 
-export const sendVerifyCode = ({email}: SendEmailCodeParams, {verifyCode}: SendVerifyCodeParams) => client.post('auth/emails', ({ email, verifyCode }));
+export const sendVerifyCode = ({email}: SendEmailCodeBody, {verifyCode}: SendVerifyCodeBody) => client.post('auth/emails', ({ email, verifyCode }));
 
-export const signUp = (body: SignUpParams) => client.post('/auth/signUp', ({body}));
+export const signUp = (body: SignUpBody) => client.post('/auth/signUp', ({body}));
 
-export const login = (body: LoginParams) => client.post('/auth/login', ({body}));
+export const login = (body: LoginBody) => client.post('/auth/login', ({body}));
 
 export const checkDuplicateNickname = ({nickname}: CheckNicknameParams) => (client.get('auth/nicknames', {
         params: {
@@ -55,10 +55,10 @@ export const checkDuplicateEmail = ({email}: CheckEmailParams) => (client.get('a
     },
 ));
 
-export const fileUpload = ({file}: FileUploadParams) => {
+export const fileUpload = ({file}: FileUploadBody) => {
     const formData = new FormData();
     if (file) formData.append('file', file);
-    return client.post('/fileUpload', formData, {
+    return client.post('/files', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },

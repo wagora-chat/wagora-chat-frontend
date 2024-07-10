@@ -5,4 +5,4 @@ interface ChatRoomsParams {
     memberId?: string | null;
 }
 
-export const readChatRooms = (body: ChatRoomsParams) => client.get('/rooms', {params: body});
+export const readChatRooms = (body: ChatRoomsParams) => client.get('/rooms', { params: body });

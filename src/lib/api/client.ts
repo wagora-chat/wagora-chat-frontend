@@ -22,7 +22,7 @@ client.interceptors.request.use(
 
         if (member) {
             config.headers['Content-Type'] = 'application/json';
-            config.headers['Authorization'] = `Bearer ${member.accessToken}`;
+            config.headers['Authorization'] = `Bearer ${member}`;
         }
 
         console.log(config);

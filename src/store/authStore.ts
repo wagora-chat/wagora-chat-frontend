@@ -1,4 +1,5 @@
 import create from 'zustand';
+import {devtools} from "zustand/middleware";
 
 interface AuthState {
     profile: File | null;
@@ -15,7 +16,8 @@ interface AuthState {
     setVerifyCode: (verifyCode: string) => void;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
+const useAuthStore = create<AuthState>()(
+    devtools((set) => ({
     profile: null,
     path: null,
     email: '',
@@ -28,6 +30,6 @@ const useAuthStore = create<AuthState>((set) => ({
     setNickname: (nickname) => set({ nickname }),
     setPassword: (email) => set({ password: email }),
     setVerifyCode: (verifyCode: string) => set({ verifyCode }),
-}));
+})));
 
 export default useAuthStore;

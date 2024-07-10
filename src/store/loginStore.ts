@@ -1,4 +1,5 @@
 import {create} from "zustand";
+import {devtools} from "zustand/middleware";
 
 interface LoginState {
     email: string;
@@ -7,11 +8,12 @@ interface LoginState {
     setPassword: (email: string) => void;
 }
 
-const useLoginStore = create<LoginState>((set) => ({
+const useLoginStore = create<LoginState>()(
+    devtools((set) => ({
     email: '',
     password: '',
     setEmail: (email: string) => set({ email }),
     setPassword: (email: string) => set({ password: email }),
-}));
+})));
 
 export default useLoginStore;

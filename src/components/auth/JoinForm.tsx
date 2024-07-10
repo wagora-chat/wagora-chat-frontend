@@ -3,6 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import useAuthStore from "../../store/authStore";
 import { checkDuplicateEmail, checkDuplicateNickname, fileUpload, sendVerifyCode, signUp } from "../../lib/api/auth";
 import AuthError from "./AuthError";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
     email: string;
@@ -16,6 +17,8 @@ const JoinForm: React.FC = () => {
     const [checkEmail, setCheckEmail] = React.useState(false);
     const [checkNickname, setCheckNickname] = React.useState(false);
     const [checkVerifyCode, setCheckVerifyCode] = React.useState(false);
+    const navigate = useNavigate();
+
 
     const {
         register,
@@ -44,6 +47,7 @@ const JoinForm: React.FC = () => {
             signUp({ path, email: data.email, nickname: data.nickname, password: data.password, checkPassword: data.checkPassword })
                 .then(() => {
                     alert("회원가입 완료");
+                    navigate('/login');
                 })
                 .catch(() => alert("회원가입 실패"));
         }
@@ -70,7 +74,7 @@ const JoinForm: React.FC = () => {
                         fileUpload({ file: profile })
                             .then((response) => {
                                 alert("프로필 이미지가 설정되었습니다.");
-                                setPath(response.data);
+                                setPath(response.data.data.filePath);
                             })
                             .catch(() => alert("파일 업로드 실패"));
                     }}
@@ -100,7 +104,7 @@ const JoinForm: React.FC = () => {
                             e.preventDefault();
                             checkDuplicateEmail({ email })
                                 .then((response) => {
-                                    if (response.data.result) {
+                                    if (response.data.data.result) {
                                         alert("사용 가능한 이메일입니다.");
                                         setCheckEmail(true);
                                     } else {
@@ -114,7 +118,10 @@ const JoinForm: React.FC = () => {
                     </button>
                     {errors.email && <AuthError errorMassage={errors.email.message}/>}
                 </div>
-                <button className="border-2 border-gray-300 hover:bg-gray-400">이메일 인증하기</button>
+                <button
+                    className="border-2 border-gray-300 hover:bg-gray-400"
+                    onClick={(e) => e.preventDefault()}
+                >이메일 인증하기</button>
 
                 <div>
                     <label htmlFor="verify">인증번호</label>
@@ -132,7 +139,7 @@ const JoinForm: React.FC = () => {
                             e.preventDefault();
                             sendVerifyCode({ email }, { verifyCode })
                                 .then((response) => {
-                                    if (response.data.email === email) {
+                                    if (response.data.data.email === email) {
                                         alert("인증 성공");
                                         setCheckVerifyCode(true);
                                     }
@@ -164,7 +171,7 @@ const JoinForm: React.FC = () => {
                             e.preventDefault();
                             checkDuplicateNickname({ nickname })
                                 .then((response) => {
-                                    if (response.data.result) {
+                                    if (response.data.data.result) {
                                         alert("사용 가능한 이름입니다.");
                                         setCheckNickname(true);
                                     } else {
