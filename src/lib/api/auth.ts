@@ -1,5 +1,9 @@
 import client from "./client";
 
+interface SendTempPasswordBody {
+    email: string;
+}
+
 interface SendEmailCodeBody {
     email: string;
 }
@@ -33,29 +37,31 @@ interface FileUploadBody {
     file: File | null;
 }
 
-export const sendEmailCode = ({email}: SendEmailCodeBody) => client.post('/auth/emails', ({email}));
+export const sendTempPassword = ({ email }: SendTempPasswordBody) => client.patch('/auth/passwords', ({ email }));
 
-export const sendVerifyCode = ({email}: SendEmailCodeBody, {verifyCode}: SendVerifyCodeBody) => client.post('auth/emails', ({ email, verifyCode }));
+export const sendEmailCode = ({ email }: SendEmailCodeBody) => client.post('/auth/emails', ({ email }));
 
-export const signUp = (body: SignUpBody) => client.post('/auth/signUp', ({body}));
+export const sendVerifyCode = ({ email }: SendEmailCodeBody, { verifyCode }: SendVerifyCodeBody) => client.post('auth/emails', ({ email, verifyCode }));
 
-export const login = (body: LoginBody) => client.post('/auth/login', ({body}));
+export const signUp = (body: SignUpBody) => client.post('/auth/signUp', ({ body }));
 
-export const checkDuplicateNickname = ({nickname}: CheckNicknameParams) => (client.get('auth/nicknames', {
+export const login = (body: LoginBody) => client.post('/auth/login', ({ body }));
+
+export const checkDuplicateNickname = ({ nickname }: CheckNicknameParams) => (client.get('auth/nicknames', {
         params: {
             nickname,
         },
     },
 ));
 
-export const checkDuplicateEmail = ({email}: CheckEmailParams) => (client.get('auth/emails', {
+export const checkDuplicateEmail = ({ email }: CheckEmailParams) => (client.get('auth/emails', {
         params: {
             email,
         },
     },
 ));
 
-export const fileUpload = ({file}: FileUploadBody) => {
+export const fileUpload = ({ file }: FileUploadBody) => {
     const formData = new FormData();
     if (file) formData.append('file', file);
     return client.post('/files', formData, {

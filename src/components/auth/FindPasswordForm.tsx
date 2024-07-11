@@ -1,25 +1,23 @@
 import React from "react";
 import {Link, useNavigate} from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { login } from "../../lib/api/auth";
+import { sendTempPassword } from "../../lib/api/auth";
 import AuthError from "./AuthError";
 
-interface LoginFormInputs {
+interface FindPasswordFormInputs {
     email: string;
-    password: string;
 }
 
-const LoginForm: React.FC = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
+const FindPasswordForm: React.FC = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm<FindPasswordFormInputs>();
     const navigate = useNavigate();
 
-    const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-        login({
+    const onSubmit: SubmitHandler<FindPasswordFormInputs> = (data) => {
+        sendTempPassword({
             email: data.email,
-            password: data.password,
         }).then((response) => {
-            navigate('/chats');
-            sessionStorage.setItem('member', JSON.stringify(response.data.data.accessToken));
+            alert("이메일로 임시 비밀번호가 발급 되었습니다.");
+            navigate('/');
         }).catch((error) => {
             console.error(error);
         });
@@ -43,20 +41,10 @@ const LoginForm: React.FC = () => {
                 />
                 {errors.email && <AuthError errorMassage={errors.email.message} />}
 
-                <label htmlFor="password">비밀 번호</label>
-                <input
-                    id="password"
-                    type="password"
-                    className='border-2'
-                    {...register("password", { required: "비밀번호를 입력해주세요" })}
-                />
-                {errors.password && <AuthError errorMassage={errors.password.message} />}
-
-                <button className='border-2 border-gray-300 hover:bg-gray-400'>로그인</button>
-                <Link className='text-xs text-gray-500' to='/find'>비밀번호 찾기</Link>
+                <button className='border-2 border-gray-300 hover:bg-gray-400'>임시 비밀번호 발급</button>
             </form>
         </div>
     );
 }
 
-export default LoginForm;
+export default FindPasswordForm;

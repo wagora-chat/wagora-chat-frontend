@@ -5,12 +5,14 @@ import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import ChatRoomListPage from "./pages/ChatRoomListPage";
 import Layout from "./components/layout/Layout";
+import FindPasswordPage from "./pages/FindPasswordPage";
 
 const App: React.FC = () => {
     return (
         <Routes>
             <Route path={'/'} element={<MainPage/>}/>
             <Route path={'/login'} element={<LoginPage/>}/>
+            <Route path={'find'} element={<FindPasswordPage/>} />
             <Route path={'/join'} element={<JoinPage/>}/>
             <Route path={'/chats'} element={<Layout><ChatRoomListPage/></Layout>}/>
         </Routes>
