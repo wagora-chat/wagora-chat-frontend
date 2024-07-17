@@ -25,6 +25,10 @@ interface LoginBody {
     "password": string,
 }
 
+interface LogoutBody {
+    "nickname": string | undefined,
+}
+
 interface CheckNicknameParams {
     nickname: string,
 }
@@ -46,6 +50,8 @@ export const sendVerifyCode = ({ email }: SendEmailCodeBody, { verifyCode }: Sen
 export const signUp = (body: SignUpBody) => client.post('/auth/signUp', ({ body }));
 
 export const login = (body: LoginBody) => client.post('/auth/login', ({ body }));
+
+export const logout = (body: LogoutBody) => client.post('/auth/logout', ({ body }));
 
 export const checkDuplicateNickname = ({ nickname }: CheckNicknameParams) => (client.get('auth/nicknames', {
         params: {

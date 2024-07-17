@@ -19,7 +19,7 @@ const LoginForm: React.FC = () => {
             password: data.password,
         }).then((response) => {
             navigate('/chats');
-            sessionStorage.setItem('member', JSON.stringify(response.data.data.accessToken));
+            sessionStorage.setItem('member', JSON.stringify(response.data));
         }).catch((error) => {
             console.error(error);
         });

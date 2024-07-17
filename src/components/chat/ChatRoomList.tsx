@@ -17,8 +17,8 @@ const ChatRoomList: React.FC = () => {
 
     useEffect(() => {
         readChatRooms({})
-            .then(r => {
-                setChatRoomList(r.data.data);
+            .then(response => {
+                setChatRoomList(response.data);
         })
             .catch(() => alert('채팅방을 불러오지 못 했습니다.'));
     }, []);

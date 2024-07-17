@@ -2,7 +2,6 @@ import axios, { InternalAxiosRequestConfig, AxiosError } from 'axios';
 
 interface Member {
     accessToken: string;
-    // 필요한 다른 필드들도 정의할 수 있습니다.
 }
 
 const client = axios.create();
@@ -22,7 +21,7 @@ client.interceptors.request.use(
 
         if (member) {
             config.headers['Content-Type'] = 'application/json';
-            config.headers['Authorization'] = `Bearer ${member}`;
+            config.headers['Authorization'] = `Bearer ${member.accessToken}`;
         }
 
         console.log(config);

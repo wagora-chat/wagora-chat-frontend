@@ -74,7 +74,7 @@ const JoinForm: React.FC = () => {
                         fileUpload({ file: profile })
                             .then((response) => {
                                 alert("프로필 이미지가 설정되었습니다.");
-                                setPath(response.data.data.filePath);
+                                setPath(response.data.filePath);
                             })
                             .catch(() => alert("파일 업로드 실패"));
                     }}
@@ -104,7 +104,7 @@ const JoinForm: React.FC = () => {
                             e.preventDefault();
                             checkDuplicateEmail({ email })
                                 .then((response) => {
-                                    if (response.data.data.result) {
+                                    if (response.data.result) {
                                         alert("사용 가능한 이메일입니다.");
                                         setCheckEmail(true);
                                     } else {
@@ -139,7 +139,7 @@ const JoinForm: React.FC = () => {
                             e.preventDefault();
                             sendVerifyCode({ email }, { verifyCode })
                                 .then((response) => {
-                                    if (response.data.data.email === email) {
+                                    if (response.data.email === email) {
                                         alert("인증 성공");
                                         setCheckVerifyCode(true);
                                     }
@@ -171,7 +171,7 @@ const JoinForm: React.FC = () => {
                             e.preventDefault();
                             checkDuplicateNickname({ nickname })
                                 .then((response) => {
-                                    if (response.data.data.result) {
+                                    if (response.data.result) {
                                         alert("사용 가능한 이름입니다.");
                                         setCheckNickname(true);
                                     } else {
