@@ -1,6 +1,6 @@
 import client from "./client";
 
-interface ChatRoomsParams {
+interface ChatRoomsParams {// chatName, memberId 없이 검색하면 전체 채팅방 조회
     chatName?: string | null;
     memberId?: string | null;
 }

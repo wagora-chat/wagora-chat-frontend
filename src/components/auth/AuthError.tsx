@@ -5,6 +5,7 @@ interface Props {
 }
 
 const AuthError: React.FC<Props> = ({ errorMassage }) => {
+    // form 에러 메시지 컴포넌트
     return (
         <div
             className='text-xs text-red-400'

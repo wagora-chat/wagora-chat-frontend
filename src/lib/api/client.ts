@@ -19,12 +19,11 @@ client.interceptors.request.use(
             }
         }
 
+        // 요청 헤더 설정
         if (member) {
             config.headers['Content-Type'] = 'application/json';
             config.headers['Authorization'] = `Bearer ${member.accessToken}`;
         }
-
-        console.log(config);
 
         return config;
     },

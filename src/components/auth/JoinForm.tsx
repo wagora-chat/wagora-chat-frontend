@@ -43,7 +43,7 @@ const JoinForm: React.FC = () => {
     } = useAuthStore();
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
-        if(checkEmail && checkNickname && checkVerifyCode) {
+        if(checkEmail && checkNickname && checkVerifyCode) { // 닉네임/이메일 중복 검사, 이메일 인증 여부 확인
             signUp({ path, email: data.email, nickname: data.nickname, password: data.password, checkPassword: data.checkPassword })
                 .then(() => {
                     alert("회원가입 완료");
@@ -74,7 +74,7 @@ const JoinForm: React.FC = () => {
                         fileUpload({ file: profile })
                             .then((response) => {
                                 alert("프로필 이미지가 설정되었습니다.");
-                                setPath(response.data.filePath);
+                                setPath(response.data.filePath); // 파일 전송 후 응답으로 받은 경로 저장
                             })
                             .catch(() => alert("파일 업로드 실패"));
                     }}

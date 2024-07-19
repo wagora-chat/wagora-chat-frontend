@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { login } from "../../lib/api/auth";
 import AuthError from "./AuthError";
+import {useAuth} from "../../context/AuthContext";
 
 interface LoginFormInputs {
     email: string;
@@ -12,14 +13,15 @@ interface LoginFormInputs {
 const LoginForm: React.FC = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
     const navigate = useNavigate();
+    const { setMember } = useAuth(); // sessionStorage 값 갱신 함수
 
     const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
         login({
             email: data.email,
             password: data.password,
         }).then((response) => {
-            navigate('/chats');
-            sessionStorage.setItem('member', JSON.stringify(response.data));
+            setMember(response.data);
+            navigate('/chats'); // 회원정보 저장 후 채팅방으로 이동
         }).catch((error) => {
             console.error(error);
         });

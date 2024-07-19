@@ -1,30 +1,17 @@
 import React, {useEffect, useRef} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {logout} from "../../lib/api/auth";
-
-interface Member {
-    nickname: string;
-    profilePath: string;
-}
+import {useAuth} from "../../context/AuthContext";
 
 const Header: React.FC = () => {
-    const [isOpen, setIsOpen] = React.useState(false);
+    const [isOpen, setIsOpen] = React.useState(false); // 모달 상태
     const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
-    const memberStr = sessionStorage.getItem('member');
-    let member: Member | null = null;
-
-    if (memberStr) {
-        try {
-            member = JSON.parse(memberStr) as Member;
-        } catch (e) {
-            console.error('Error parsing member from sessionStorage', e);
-        }
-    }
+    const { member } = useAuth();
 
     const handleToggleClick = () => { setIsOpen(!isOpen); }
     const handleClickOutside = (event: MouseEvent) => {
-        if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        if (menuRef.current && !menuRef.current.contains(event.target as Node)) { // menuRef 요소 이외의 영역 클릭 시 모달 창 닫기
             setIsOpen(false);
         }
     };
@@ -41,6 +28,7 @@ const Header: React.FC = () => {
     }
 
     useEffect(() => {
+        // 컴포넌트가 마운트될 때 mousedown(마우스 클릭) 이벤트 리스너를 추가하고, 언마운트될 때 제거
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
