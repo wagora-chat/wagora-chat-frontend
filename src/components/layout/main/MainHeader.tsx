@@ -1,21 +1,26 @@
 import React, {useEffect, useRef} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {logout} from "../../lib/api/auth";
-import {useAuth} from "../../context/AuthContext";
+import {logout} from "../../../lib/api/auth";
+import {useAuth} from "../../../context/AuthContext";
+import logo from "../../../image/logo/text_logo_100x31.png";
+import profile from "../../../image/icon/join_profile_110x110.png";
 
-const Header: React.FC = () => {
+const MainHeader: React.FC = () => {
     const [isOpen, setIsOpen] = React.useState(false); // 모달 상태
     const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
-    const { member } = useAuth();
+    const {member} = useAuth();
 
-    const handleToggleClick = () => { setIsOpen(!isOpen); }
+    const handleToggleClick = () => {
+        setIsOpen(!isOpen);
+    }
     const handleClickOutside = (event: MouseEvent) => {
         if (menuRef.current && !menuRef.current.contains(event.target as Node)) { // menuRef 요소 이외의 영역 클릭 시 모달 창 닫기
             setIsOpen(false);
         }
     };
-    const onLogout = () => {
+
+    const handleLogout = () => {
         logout({
             nickname: member?.nickname
         }).then(r => {
@@ -36,22 +41,36 @@ const Header: React.FC = () => {
     }, []);
 
     return (
-        <header
-            className={'flex justify-between py-2 px-14'}>
+        <header className='flex justify-between py-3 px-14'>
             <Link
-                className='text-xl font-bold p-2'
-                to={'/chats'}
-            >WAGORA</Link>
+                to='/chats'
+            >
+                <img
+                    src={logo}
+                    alt="로고"
+                    className="w-28 h-9"
+                />
+            </Link>
             <div className="flex flex-col items-center justify-center">
                 <div className="flex flex-row items-center justify-center gap-2">
                     <div
-                        className='text-md font-bold cursor-pointer'
+                        className='mr-2 font-noto-sans-kr font-bold text-lg text-charcoal cursor-pointer'
                         onClick={handleToggleClick}
                     >{member?.nickname}</div>
-                    <img
-                        className="w-10 h-10 rounded-full shadow-md"
-                        src={member?.profilePath} alt="프로필"
-                    />
+                    {
+                        member?.profilePath ?
+                            <img
+                                src={member.profilePath}
+                                alt="프로필"
+                                className="w-9 h-9 rounded-full"
+                            />
+                            :
+                            <img
+                                src={profile}
+                                alt="프로필"
+                                className="w-9 h-9 rounded-full"
+                            />
+                    }
                 </div>
 
                 {isOpen &&
@@ -60,18 +79,20 @@ const Header: React.FC = () => {
                         ref={menuRef}
                     >
                         <div
-                            className="flex flex-col justify-center items-center gap-2"
+                            className="flex flex-col justify-center items-center gap-2 font-noto-sans-kr font-normal text-lg"
                         >
                             <div
-                                className={'cursor-pointer'}
-                                onClick={onLogout}
+                                className='cursor-pointer hover:text-charcoal'
+                                onClick={handleLogout}
                             >
-                                로그아웃</div>
+                                로그아웃
+                            </div>
                             <div
-                                className={'cursor-pointer'}
+                                className={'cursor-pointer hover:text-charcoal'}
                                 onClick={() => navigate('/mypage')}
                             >
-                                마이페이지</div>
+                                마이페이지
+                            </div>
                         </div>
                     </div>
                 }
@@ -80,4 +101,4 @@ const Header: React.FC = () => {
     );
 }
 
-export default Header;
+export default MainHeader;

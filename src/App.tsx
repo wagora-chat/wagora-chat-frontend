@@ -1,27 +1,28 @@
-import JoinPage from "./pages/JoinPage";
 import {Routes, Route} from "react-router-dom";
 import React from "react";
-import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import ChatRoomListPage from "./pages/ChatRoomListPage";
-import Layout from "./components/layout/Layout";
+import MainLayout from "./components/layout/main/MainLayout";
 import FindPasswordPage from "./pages/FindPasswordPage";
 import {AuthProvider} from "./context/AuthContext";
 import ProtectedRoute from "./route/ProtectedRoute";
+import SubLayout from "./components/layout/sub/SubLayout";
 
 const App: React.FC = () => {
     return (
         <AuthProvider>
             <Routes>
                 <Route path={'/'} element={<MainPage/>}/>
-                <Route path={'/login'} element={<LoginPage/>}/>
-                <Route path={'find'} element={<FindPasswordPage/>} />
-                <Route path={'/join'} element={<JoinPage/>}/>
+                <Route path={'find'} element={
+                    <SubLayout>
+                        <FindPasswordPage/>
+                    </SubLayout>
+                }/>
                 <Route path={'/chats'} element={
                     <ProtectedRoute>
-                        <Layout>
+                        <MainLayout>
                             <ChatRoomListPage/>
-                        </Layout>
+                        </MainLayout>
                     </ProtectedRoute>}
                 />
             </Routes>

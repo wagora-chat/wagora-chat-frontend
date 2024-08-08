@@ -1,9 +1,9 @@
 import React from "react";
-import FindPasswordForm from "../components/auth/FindPasswordForm";
+import FindPasswordTemplate from "../components/tamplate/FindPasswordTemplate";
 
 const FindPasswordPage: React.FC = () => {
     return (
-        <FindPasswordForm />
+        <FindPasswordTemplate />
     );
 }
 
