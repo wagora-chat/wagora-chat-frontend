@@ -12,13 +12,13 @@ const App: React.FC = () => {
     return (
         <AuthProvider>
             <Routes>
-                <Route path={'/'} element={<MainPage/>}/>
-                <Route path={'find'} element={
+                <Route path='/' element={<MainPage/>}/>
+                <Route path='find' element={
                     <SubLayout>
                         <FindPasswordPage/>
                     </SubLayout>
                 }/>
-                <Route path={'/chats'} element={
+                <Route path='/chats' element={
                     <ProtectedRoute>
                         <MainLayout>
                             <ChatRoomListPage/>

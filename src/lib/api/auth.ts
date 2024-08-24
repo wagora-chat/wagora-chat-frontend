@@ -13,7 +13,7 @@ interface SendVerifyCodeBody {
 }
 
 interface SignUpBody {
-    "path": string | null,
+    "profile": string | null,
     "nickname": string,
     "email": string,
     "password": string,
@@ -47,11 +47,11 @@ export const sendEmailCode = ({ email }: SendEmailCodeBody) => client.post('/aut
 
 export const sendVerifyCode = ({ email }: SendEmailCodeBody, { verifyCode }: SendVerifyCodeBody) => client.post('auth/emails', ({ email, verifyCode }));
 
-export const signUp = (body: SignUpBody) => client.post('/auth/signUp', ({ body }));
+export const signUp = (body: SignUpBody) => client.post('/auth/signUp', ({ ...body }));
 
-export const login = (body: LoginBody) => client.post('/auth/login', ({ body }));
+export const login = (body: LoginBody) => client.post('/auth/login', ({ ...body }));
 
-export const logout = (body: LogoutBody) => client.post('/auth/logout', ({ body }));
+export const logout = (body: LogoutBody) => client.post('/auth/logout', ({ ...body }));
 
 export const checkDuplicateNickname = ({ nickname }: CheckNicknameParams) => (client.get('auth/nicknames', {
         params: {

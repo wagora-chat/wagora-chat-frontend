@@ -2,9 +2,11 @@ import React, {createContext, ReactNode, useContext } from "react";
 import useSessionStorage from "../hooks/useSessionStorage";
 
 interface Member {
-    nickname: string;
-    accessToken: string;
-    profilePath: string;
+    data: {
+        nickname: string;
+        accessToken: string;
+        profilePath: string;
+    }
 }
 
 interface AuthContextType {

@@ -22,7 +22,7 @@ const MainHeader: React.FC = () => {
 
     const handleLogout = () => {
         logout({
-            nickname: member?.nickname
+            nickname: member?.data.nickname
         }).then(r => {
             alert('로그아웃 되었습니다.')
             navigate('/')
@@ -56,11 +56,11 @@ const MainHeader: React.FC = () => {
                     <div
                         className='mr-2 font-noto-sans-kr font-bold text-lg text-charcoal cursor-pointer'
                         onClick={handleToggleClick}
-                    >{member?.nickname}</div>
+                    >{member?.data.nickname}</div>
                     {
-                        member?.profilePath ?
+                        member?.data.profilePath ?
                             <img
-                                src={member.profilePath}
+                                src={member.data.profilePath}
                                 alt="프로필"
                                 className="w-9 h-9 rounded-full"
                             />

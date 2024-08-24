@@ -3,7 +3,6 @@ import {useForm, SubmitHandler} from "react-hook-form";
 import useAuthStore from "../../store/authStore";
 import {checkDuplicateEmail, checkDuplicateNickname, fileUpload, sendVerifyCode, signUp} from "../../lib/api/auth";
 import AuthError from "./AuthError";
-import {useNavigate} from "react-router-dom";
 import logo from "../../image/logo/modal_Logo_65x61.5.png";
 import profileIcon from "../../image/icon/join_profile_110x110.png";
 import plus from "../../image/icon/join_plus button_30x30.png";
@@ -27,7 +26,6 @@ const JoinForm: React.FC<Props> = ({ setCompleted }) => {
     const [checkEmail, setCheckEmail] = React.useState(false);
     const [checkNickname, setCheckNickname] = React.useState(false);
     const [checkVerifyCode, setCheckVerifyCode] = React.useState(false);
-    const navigate = useNavigate();
 
     const {
         register,
@@ -54,7 +52,7 @@ const JoinForm: React.FC<Props> = ({ setCompleted }) => {
     const onSubmit: SubmitHandler<FormData> = (data) => {
         if (checkEmail && checkNickname && checkVerifyCode) { // 닉네임/이메일 중복 검사, 이메일 인증 여부 확인
             signUp({
-                path,
+                profile: path,
                 email: data.email,
                 nickname: data.nickname,
                 password: data.password,
@@ -63,7 +61,6 @@ const JoinForm: React.FC<Props> = ({ setCompleted }) => {
                 .then(() => {
                     alert("회원가입 완료되었습니다 Let's make a Agora :)");
                     setCompleted(true);
-
                 })
                 .catch(() => alert("회원가입 실패"));
         } else alert('중복 검사 및 이메일 인증을 모두 완료해주세요');
@@ -90,7 +87,7 @@ const JoinForm: React.FC<Props> = ({ setCompleted }) => {
         event.preventDefault();
         checkDuplicateEmail({email})
             .then((response) => {
-                if (response.data.result) {
+                if (!response.data.result) {
                     alert("사용 가능한 이메일입니다.");
                     setCheckEmail(true);
                 } else {
@@ -104,7 +101,7 @@ const JoinForm: React.FC<Props> = ({ setCompleted }) => {
         event.preventDefault();
         sendVerifyCode({email}, {verifyCode})
             .then((response) => {
-                if (response.data.email === email) {
+                if (response.status === 201) {
                     alert("인증 성공");
                     setCheckVerifyCode(true);
                 } else alert("인증 번호를 다시 입력해주세요");
@@ -118,7 +115,7 @@ const JoinForm: React.FC<Props> = ({ setCompleted }) => {
         event.preventDefault();
         checkDuplicateNickname({nickname})
             .then((response) => {
-                if (response.data.result) {
+                if (!response.data.result) {
                     alert("사용 가능한 이름입니다.");
                     setCheckNickname(true);
                 } else {
