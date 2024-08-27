@@ -1,6 +1,5 @@
 import React from "react";
 import FindPasswordForm from "../auth/FindPasswordForm";
-import AuthCompleteBox from "../auth/AuthCompleteBox";
 
 const FindPasswordTemplate: React.FC = () => {
     const [completed, setCompleted] = React.useState<boolean>(false);

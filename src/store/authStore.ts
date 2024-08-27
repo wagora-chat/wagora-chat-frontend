@@ -19,7 +19,7 @@ interface AuthState {
 const useAuthStore = create<AuthState>()(
     devtools((set) => ({
     profile: null,
-    path: "www.path.com",
+    path: null,
     email: '',
     nickname: '',
     password: '',
