@@ -1,5 +1,4 @@
 import React from "react";
-import {useNavigate} from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { sendTempPassword } from "../../lib/api/auth";
 import AuthError from "./AuthError";
@@ -16,7 +15,6 @@ interface Props {
 
 const FindPasswordForm: React.FC<Props> = ({ setCompleted }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<FindPasswordFormInputs>();
-    const navigate = useNavigate();
 
     const onSubmit: SubmitHandler<FindPasswordFormInputs> = (data) => {
         sendTempPassword({

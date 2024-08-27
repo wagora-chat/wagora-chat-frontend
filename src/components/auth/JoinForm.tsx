@@ -1,7 +1,14 @@
 import React, {ChangeEvent} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
 import useAuthStore from "../../store/authStore";
-import {checkDuplicateEmail, checkDuplicateNickname, fileUpload, sendVerifyCode, signUp} from "../../lib/api/auth";
+import {
+    checkDuplicateEmail,
+    checkDuplicateNickname,
+    fileUpload,
+    sendEmailCode,
+    sendVerifyCode,
+    signUp
+} from "../../lib/api/auth";
 import AuthError from "./AuthError";
 import logo from "../../image/logo/modal_Logo_65x61.5.png";
 import profileIcon from "../../image/icon/join_profile_110x110.png";
@@ -83,6 +90,17 @@ const JoinForm: React.FC<Props> = ({ setCompleted }) => {
             .catch(() => alert("파일 업로드 실패"));
     }
 
+    const handleSendEmailCode = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        sendEmailCode({email})
+            .then((response) => {
+                if(response.status === 201) {
+                    alert("인증 번호가 전송되었습니다.")
+                }
+            })
+            .catch(() => alert("인증 실패"));
+    }
+
     const handleCheckDuplicateEmail = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         checkDuplicateEmail({email})
@@ -104,11 +122,9 @@ const JoinForm: React.FC<Props> = ({ setCompleted }) => {
                 if (response.status === 201) {
                     alert("인증 성공");
                     setCheckVerifyCode(true);
-                } else alert("인증 번호를 다시 입력해주세요");
+                }
             })
-            .catch((error) => {
-                console.log("에러 발생", error);
-            });
+            .catch(() => alert("인증 번호를 다시 입력해주세요"));
     }
 
     const handleCheckDuplicateNickname = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -190,7 +206,7 @@ const JoinForm: React.FC<Props> = ({ setCompleted }) => {
                             </div>
                             <button
                                 className="absolute right-1 top-1 hover:opacity-50 h-8 w-8"
-                                onClick={(e) => e.preventDefault()} // 이메일 인증 번호 전송 코드 넣기
+                                onClick={(e) => handleSendEmailCode(e)} // 이메일 인증 번호 전송 코드 넣기
                             >
                                 <img
                                     src={mail}

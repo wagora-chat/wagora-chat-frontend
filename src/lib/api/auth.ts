@@ -47,7 +47,10 @@ export const sendEmailCode = ({ email }: SendEmailCodeBody) => client.post('/aut
 
 export const sendVerifyCode = ({ email }: SendEmailCodeBody, { verifyCode }: SendVerifyCodeBody) => client.post('auth/emails', ({ email, verifyCode }));
 
-export const signUp = (body: SignUpBody) => client.post('/auth/signUp', ({ ...body }));
+export const signUp = (body: SignUpBody) => {
+    if(!body.profile) body.profile = "www.path.com"; // 프로필을 설정하지 않는 경우 기본 경로로 설정
+    return client.post('/auth/signUp', ({ ...body }))
+};
 
 export const login = (body: LoginBody) => client.post('/auth/login', ({ ...body }));
 
