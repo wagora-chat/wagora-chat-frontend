@@ -5,4 +5,4 @@ interface ChatRoomsParams {// chatName, memberId 없이 검색하면 전체 채�
     memberId?: string | null;
 }
 
-export const readChatRooms = (body: ChatRoomsParams) => client.get('/rooms', { params: body });
+export const readChatRooms = (body: ChatRoomsParams) => client.get('/chat-rooms', { params: body });

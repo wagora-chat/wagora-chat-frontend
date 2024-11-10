@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { member } = useAuth();
 
-    if (!member?.data.accessToken) {
+    if (!member?.accessToken) {
         return <Navigate to="/" replace />;
     }
 

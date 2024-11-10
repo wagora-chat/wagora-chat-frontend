@@ -4,7 +4,10 @@ interface Member {
     accessToken: string;
 }
 
-const client = axios.create();
+
+const client = axios.create({
+    baseURL: process.env.REACT_APP_SERVER_URL
+});
 
 client.interceptors.request.use(
     (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig> => {

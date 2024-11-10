@@ -22,7 +22,7 @@ const LoginForm: React.FC = () => {
             email: data.email,
             password: data.password,
         }).then((response) => {
-            setMember(response.data);
+            setMember(response.data.data);
             navigate('/chats'); // 회원정보 저장 후 채팅방으로 이동
         }).catch((error) => {
             alert("로그인 실패");

@@ -56,11 +56,11 @@ const MainHeader: React.FC = () => {
                     <div
                         className='mr-2 font-noto-sans-kr font-bold text-lg text-charcoal cursor-pointer'
                         onClick={handleToggleClick}
-                    >{member?.data.nickname}</div>
+                    >{member?.nickname}</div>
                     {
-                        member?.data.profilePath ?
+                        member?.profilePath ?
                             <img
-                                src={member.data.profilePath}
+                                src={member.profilePath}
                                 alt="프로필"
                                 className="w-9 h-9 rounded-full"
                             />
