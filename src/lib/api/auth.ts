@@ -52,9 +52,8 @@ export const signUp = (body: SignUpBody) => {
     return client.post('/auth/signUp', ({ ...body }))
 };
 
-export const login = (body: LoginBody) => client.post('/auth/login', ({ ...body }));
-
-export const logout = (body: LogoutBody) => client.post('/auth/logout', ({ ...body }));
+// withCredentials: true -> 백엔드 응답 쿠기 정보를 가져오기 위함
+export const login = (body: LoginBody) => client.post(`/auth/login`, ({ ...body }), {withCredentials: true});
 
 export const checkDuplicateNickname = ({ nickname }: CheckNicknameParams) => (client.get('auth/nicknames', {
         params: {

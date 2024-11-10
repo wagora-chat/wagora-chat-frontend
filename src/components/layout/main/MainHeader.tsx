@@ -1,15 +1,14 @@
 import React, {useEffect, useRef} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {logout} from "../../../lib/api/auth";
 import {useAuth} from "../../../context/AuthContext";
 import logo from "../../../image/logo/text_logo_100x31.png";
-import profile from "../../../image/icon/join_profile_110x110.png";
+import profile from "../../../image/icon/join_profile_110x110.png"
 
 const MainHeader: React.FC = () => {
     const [isOpen, setIsOpen] = React.useState(false); // 모달 상태
     const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
-    const {member} = useAuth();
+    const {member, setMember} = useAuth();
 
     const handleToggleClick = () => {
         setIsOpen(!isOpen);
@@ -21,15 +20,9 @@ const MainHeader: React.FC = () => {
     };
 
     const handleLogout = () => {
-        logout({
-            nickname: member?.data.nickname
-        }).then(r => {
-            alert('로그아웃 되었습니다.')
-            navigate('/')
-        }).catch((error) => {
-            alert('로그아웃 실패');
-            console.log(error);
-        })
+        alert('로그아웃 되었습니다.')
+        setMember(null)
+        navigate('/')
     }
 
     useEffect(() => {
