@@ -105,7 +105,7 @@ const JoinForm: React.FC<Props> = ({ setCompleted }) => {
         event.preventDefault();
         checkDuplicateEmail({email})
             .then((response) => {
-                if (!response.data.result) {
+                if (!response.data.data.result) {
                     alert("사용 가능한 이메일입니다.");
                     setCheckEmail(true);
                 } else {
@@ -131,7 +131,7 @@ const JoinForm: React.FC<Props> = ({ setCompleted }) => {
         event.preventDefault();
         checkDuplicateNickname({nickname})
             .then((response) => {
-                if (!response.data.result) {
+                if (!response.data.data.result) {
                     alert("사용 가능한 이름입니다.");
                     setCheckNickname(true);
                 } else {
